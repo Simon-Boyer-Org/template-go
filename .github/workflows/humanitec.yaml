@@ -1,0 +1,19 @@
+name: Humanitec
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+  humanitec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+            curl -L -o score-humanitec_0.7.0_linux_amd64.tar.gz https://github.com/score-spec/score-humanitec/releases/download/0.7.0/score-humanitec_0.7.0_linux_amd64.tar.gz
+            tar -xzf score-humanitec_0.7.0_linux_amd64.tar.gz
+            chmod +x score-humanitec
+            ./score-humanitec delta --deploy --app $APP_NAME --env development --org arctiq --token $HUMANITEC_TOKEN
+        env:
+            APP_NAME: ${{ github.event.repository.name }}
+            HUMANITEC_TOKEN: ${{ secrets.HUMANITEC_TOKEN }}
